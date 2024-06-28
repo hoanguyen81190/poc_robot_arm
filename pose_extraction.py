@@ -22,7 +22,8 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect('localhost', 9001, 60)  # 60 is waiting interval
+# Was port 9001
+client.connect('localhost', 8080, 60)  # 60 is waiting interval
 client.loop_start()
 
 # Define the MQTT topic
@@ -34,7 +35,8 @@ def pose_extraction():
     mp_drawing = mp.solutions.drawing_utils
 
     # Open the webcam
-    cap = cv2.VideoCapture(1)
+    # Was capture id 1
+    cap = cv2.VideoCapture(0)
 
     while cap.isOpened():
         ret, frame = cap.read()

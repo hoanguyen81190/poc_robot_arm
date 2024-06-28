@@ -7,3 +7,6 @@ python pose_extraction.py
 
 # Robodk simulation
 Run the script from the station
+
+
+"C:/RoboDK/Python-Embedded/pythonw" "C:/RoboDK/Python-Embedded/idlelib/idle.py"
