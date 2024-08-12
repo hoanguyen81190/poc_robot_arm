@@ -23,7 +23,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 # Was port 9001
-client.connect('localhost', 8080, 60)  # 60 is waiting interval
+client.connect('localhost', 9001, 60)  # 60 is waiting interval
 client.loop_start()
 
 # Define the MQTT topic
