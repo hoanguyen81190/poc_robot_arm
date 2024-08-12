@@ -5,7 +5,10 @@ pip install mediapipe opencv-python
 2. Running
 python pose_extraction.py
 
-# Robodk simulation
+# Coppelia Simulation
+Run the coppelia.py
+
+# Robodk simulation (optional)
 Run the script from the station
 
 
