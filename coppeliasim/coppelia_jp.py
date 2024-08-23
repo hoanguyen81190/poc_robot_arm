@@ -19,7 +19,7 @@ def pose_extraction():
     # Was capture id 1
     cap = cv2.VideoCapture(0)
 
-    command_frame_interval = 60
+    command_frame_interval = 1
     current_frame_count = 0
     while cap.isOpened():
         if keyboard.is_pressed('esc'):  # Check if ESC key is pressed
@@ -44,8 +44,9 @@ def pose_extraction():
             landmarks_data = np.array([[landmark.x, landmark.y, landmark.z, landmark.visibility] for landmark in landmarks])
 
             # SEND TO SIMULATION
-            if current_frame_count > command_frame_interval:
-                current_frame_count -= command_frame_interval
+            #if current_frame_count > command_frame_interval:
+            #    current_frame_count -= command_frame_interval
+            if(pose_queue.empty()):
                 pose_queue.put(landmarks_data)
 
             #print(results.pose_landmarks)
@@ -149,10 +150,10 @@ def simulation():
         # Step the simulation
         #simulation_time = 0
         #while simulation_time < 5:  # Run for 5 seconds
-        print(f'Simulation time: {simulation_time:.2f} [s]')
+        #print(f'Simulation time: {simulation_time:.2f} [s]')
         sim.step()
         simulation_time = sim.getSimulationTime()
-        time.sleep(0.1)  # Sleep to avoid excessive CPU usage
+        time.sleep(0.01)  # Sleep to avoid excessive CPU usage
 
     # Stop the simulation
     sim.stopSimulation()
