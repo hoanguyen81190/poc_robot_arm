@@ -3,10 +3,7 @@ import time
 
 import cv2
 import mediapipe as mp
-import paho.mqtt.client as mqtt
 import threading, queue
-import random
-import json
 import keyboard
 import math
 import numpy as np
@@ -126,27 +123,36 @@ def simulation():
         else:
             print(f'Failed to get handle for {name}')
 
-    # Set joint positions
+    # Continuously step the coppelia simulation
+    simulation_time = 0
     while (True):
         if keyboard.is_pressed('esc'):  # Check if ESC key is pressed
             print("ESC key pressed. Stopping simulation.")
             break
-        if pose_queue.empty():
-            time.sleep(0.1)
-            continue
-        landmarks_data = pose_queue.get()
-        shoulder, elbow, wrist = pose_to_joint_angles(landmarks_data)
-        joint_positions = [shoulder, elbow, wrist, 0.5, 0.5, 0.5]  # Example positions in radians
-        for i, handle in enumerate(joint_handles):
-            sim.setJointTargetPosition(handle, joint_positions[i])
+        
+        # Update the pose location if available
+        base = 0
+        if not pose_queue.empty():
+            landmarks_data = pose_queue.get()
+            shoulder, elbow, wrist = pose_to_joint_angles(landmarks_data)
+            #Joint positions for the UR10 robot
+            # 0,0,0,0 is the home position which leaves the arm pointing straight up
+            # 0 is the base and rotates around the up axis
+            # 1 is the first joint and corresponds to the shoulder and rotates around the x or y axis
+            # 2 is the second joint and corresponds to the elbow and rotates around the x or y axis
+            # 3 is the third joint and corresponds to the wrist and rotates around the x or y axis
+            joint_positions = [base, shoulder, elbow, wrist, 0, 0]  # Example positions in radians
+
+            for i, handle in enumerate(joint_handles):
+                sim.setJointTargetPosition(handle, joint_positions[i])
 
         # Step the simulation
-        simulation_time = 0
-        while simulation_time < 5:  # Run for 5 seconds
-            print(f'Simulation time: {simulation_time:.2f} [s]')
-            sim.step()
-            simulation_time = sim.getSimulationTime()
-            time.sleep(0.1)  # Sleep to avoid excessive CPU usage
+        #simulation_time = 0
+        #while simulation_time < 5:  # Run for 5 seconds
+        print(f'Simulation time: {simulation_time:.2f} [s]')
+        sim.step()
+        simulation_time = sim.getSimulationTime()
+        time.sleep(0.1)  # Sleep to avoid excessive CPU usage
 
     # Stop the simulation
     sim.stopSimulation()
