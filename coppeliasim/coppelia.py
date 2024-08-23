@@ -20,7 +20,7 @@ def pose_extraction():
 
     # Open the webcam
     # Was capture id 1
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
     while cap.isOpened():
         if keyboard.is_pressed('esc'):  # Check if ESC key is pressed

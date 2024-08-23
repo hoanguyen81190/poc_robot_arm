@@ -6,6 +6,7 @@ pip install mediapipe opencv-python
 python pose_extraction.py
 
 # Coppelia Simulation
+pip install coppeliasim-zmqremoteapi-client
 Run the coppelia.py
 
 # Robodk simulation (optional)
