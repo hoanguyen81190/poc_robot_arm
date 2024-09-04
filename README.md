@@ -6,8 +6,11 @@ pip install mediapipe opencv-python
 python pose_extraction.py
 
 # Coppelia Simulation
+1. Installing
 pip install coppeliasim-zmqremoteapi-client
-Run the coppelia.py
+3. Running
+- Forward kinematics: coppelia_forward.py
+- Inverse kinematics: coppelia_jp.py 
 
 # Robodk simulation (optional)
 Run the script from the station
