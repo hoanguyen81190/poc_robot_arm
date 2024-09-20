@@ -17,7 +17,7 @@ def on_message(client, userdata, message):
 
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 #client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport='websockets')
-client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="websockets")
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, transport="tcp")
 
 client.on_connect = on_connect
 client.on_message = on_message
