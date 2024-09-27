@@ -23,7 +23,7 @@
     </collision>
   </link>
 
-  <link name="Shoulder1">
+  <link name="Shoulder">
     <inertial>
       <origin xyz="-8.131E-07 0.082255 0.013094" rpy="0 0 0" />
       <mass value="7.369" />
@@ -49,7 +49,7 @@
   <joint name="J1" type="revolute">
     <origin xyz="0 0 0.0993" rpy="1.5708 0 0" />
     <parent link="base_link" />
-    <child link="Shoulder1" />
+    <child link="Shoulder" />
     <axis xyz="0 1 0" />
     <limit lower="-6.28" upper="6.28" effort="0" velocity="2.094" />
     <dynamics damping="1.5" friction="1" />
@@ -81,7 +81,7 @@
 
   <joint name="J2" type="revolute">
     <origin xyz="0 0.0814 0.0946" rpy="0 0 1.5708" />
-    <parent link="Shoulder1" />
+    <parent link="Shoulder" />
     <child link="Shoulder2" />
     <axis xyz="0 0 1" />
     <limit lower="-6.28" upper="6.28" effort="0" velocity="2.094" />
