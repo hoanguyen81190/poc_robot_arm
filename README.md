@@ -12,6 +12,10 @@ pip install coppeliasim-zmqremoteapi-client keyboard
 - Forward kinematics: coppelia_forward.py
 - Inverse kinematics: coppelia_jp.py 
 
+# Inverse kinematics
+1. Installing
+pip install ikpy
+
 # Robodk simulation (optional)
 Run the script from the station
 

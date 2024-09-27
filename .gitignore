@@ -1,1 +1,4 @@
 venv/
+coppeliasim/Utils/__pycache__/ExponentialSmoother.cpython-312.pyc
+coppeliasim/Utils/__pycache__/PIDController.cpython-312.pyc
+coppeliasim/Utils/__pycache__/utils.cpython-312.pyc

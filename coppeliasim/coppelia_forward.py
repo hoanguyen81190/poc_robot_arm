@@ -21,7 +21,7 @@ def pose_extraction():
 
     # Open the webcam
     # Was capture id 1
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
     command_frame_interval = 1
     current_frame_count = 0
