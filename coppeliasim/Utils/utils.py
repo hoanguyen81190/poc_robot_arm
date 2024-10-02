@@ -31,7 +31,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the URXe URDF file into the kinematic chain
-robot_chain = Chain.from_urdf_file("./UR10e.urdf")
+robot_chain = Chain.from_urdf_file("./UR16e_end.urdf")
 
 # Print the robot structure
 #print(robot_chain)
@@ -147,7 +147,7 @@ def exponential_smoothing(data, alpha):
 def deadband_control(target_position, current_position, deadband_threshold = 0.02):
     error = abs(target_position - current_position)
     
-    print(error)
+    # print(error)
 
     if max(error) > deadband_threshold: #TODO perhaps this should be the sum of the absolute error instead
         # Apply control if the error exceeds the threshold

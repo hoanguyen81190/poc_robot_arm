@@ -8,6 +8,7 @@ import keyboard
 import math
 import numpy as np
 import signal 
+import time
     
 import rtde_receive
 import rtde_control
@@ -125,6 +126,14 @@ def robot_control():
     rtde_r = rtde_receive.RTDEReceiveInterface("10.213.55.123")
     rtde_c = rtde_control.RTDEControlInterface("10.213.55.123")
     
+    rolling_average_count = 5
+    rolling_average_joints = [[0, 0, 0, 0, 0, 0] for _ in range(rolling_average_count)]
+    rolling_average_joints = np.array(rolling_average_joints)
+    rolling_average_joints = rolling_average_joints.astype(np.float64)
+    rolling_average_index = 0
+    
+    rolling_average_ready = False
+    
     while (not stop_flag):  
         # Update the pose location if available
         base = 0
@@ -157,11 +166,30 @@ def robot_control():
             joint_positions[0] = shoulder_yaw_angle_radians
             joint_positions[1] = shoulder_pitch_angle_radians
             joint_positions[2] = -elbow_angle_radians
-
-            print(joint_positions)
-            print(f'shoulder {math.degrees(shoulder_pitch_angle_radians)}, elbow {math.degrees(elbow_angle_radians)}')
             
-            rtde_c.moveJ(joint_positions, 0.06, 0.06)
+            rolling_average_joints[rolling_average_index] = joint_positions
+            rolling_average_index = (rolling_average_index + 1) % rolling_average_count
+            if rolling_average_index == 0:
+                rolling_average_ready = True
+                
+            # print(rolling_average_joints)
+            
+            # if rolling_average_ready:
+            #     average_joint_positions = np.mean(rolling_average_joints, axis=0)
+                
+            #     print(joint_positions)
+            #     print(average_joint_positions)
+            #     print(f'shoulder {math.degrees(shoulder_pitch_angle_radians)}, elbow {math.degrees(elbow_angle_radians)}')
+                
+            #     # period = rtde_c.initPeriod()
+            #     rtde_c.moveJ(average_joint_positions, 1.05/4, 1.4/2, True)
+            #     time.sleep(0.3)
+            #     # rtde_c.waitPeriod(period)
+                
+            
+            # print("HSHSHSHSH")    
+            # rtde_c.moveJ_IK(np.asarray([0, 1, 0]), 1.05/4, 1.4/4)
+
         
         time.sleep(0.01)  # Sleep to avoid excessive CPU usage
 
