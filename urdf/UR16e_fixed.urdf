@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/base_link_fix.STL" />
+          filename="meshes/base_link.stl" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/base_link_fix.STL" />
+          filename="meshes/base_link.stl" />
       </geometry>
     </collision>
   </link>
@@ -48,7 +48,7 @@
     name="Shoulder1">
     <inertial>
       <origin
-        xyz="-8.131E-07 0.082255 0.013094"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="7.369" />
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link1.STL" />
+          filename="meshes/shoulder1.stl" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link1.STL" />
+          filename="meshes/shoulder1.stl" />
       </geometry>
     </collision>
   </link>
@@ -88,8 +88,8 @@
     name="J1"
     type="revolute">
     <origin
-      xyz="0 0 0.0993"
-      rpy="1.5708 0 0" />
+      xyz="0 0 0"
+      rpy="0 0 0" />
     <parent
       link="base_link" />
     <child
@@ -113,7 +113,7 @@
     name="Shoulder2">
     <inertial>
       <origin
-        xyz="-4.978E-08 0.18974 0.081646"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="10.45" />
@@ -131,7 +131,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link2.STL" />
+          filename="meshes/shoulder2.stl" />
       </geometry>
       <material
         name="">
@@ -145,7 +145,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link2.STL" />
+          filename="meshes/shoulder2.stl" />
       </geometry>
     </collision>
   </link>
@@ -153,8 +153,8 @@
     name="J2"
     type="revolute">
     <origin
-      xyz="0 0.0814 0.0946"
-      rpy="0 0 1.5708" />
+      xyz="0 0 0"
+      rpy="0 0 0" />
     <parent
       link="Shoulder1" />
     <child
@@ -178,7 +178,7 @@
     name="Elbow">
     <inertial>
       <origin
-        xyz="-1.5433E-05 0.16483 -0.048444"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="4.321" />
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link3.STL" />
+          filename="meshes/elbow.stl" />
       </geometry>
       <material
         name="">
@@ -210,7 +210,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link3.STL" />
+          filename="meshes/elbow.stl" />
       </geometry>
     </collision>
   </link>
@@ -218,7 +218,7 @@
     name="J3"
     type="revolute">
     <origin
-      xyz="0 0.4784 0"
+      xyz="0 0 0"
       rpy="0 0 0" />
     <parent
       link="Shoulder2" />
@@ -243,7 +243,7 @@
     name="Wrist1">
     <inertial>
       <origin
-        xyz="6.1842E-06 0.0015493 0.063631"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="2.180" />
@@ -261,7 +261,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link4.STL" />
+          filename="meshes/wrist1.stl" />
       </geometry>
       <material
         name="">
@@ -275,7 +275,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link4.STL" />
+          filename="meshes/wrist1.stl" />
       </geometry>
     </collision>
   </link>
@@ -283,8 +283,8 @@
     name="J4"
     type="revolute">
     <origin
-      xyz="0 0.36 0"
-      rpy="0 0 1.5707963267949" />
+      xyz="0 0 0"
+      rpy="0 0 0" />
     <parent
       link="Elbow" />
     <child
@@ -308,7 +308,7 @@
     name="Wrist2">
     <inertial>
       <origin
-        xyz="1.976E-07 0.1069 0.0017385"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="2.033" />
@@ -326,7 +326,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link5.STL" />
+          filename="meshes/wrist2.stl" />
       </geometry>
       <material
         name="">
@@ -340,7 +340,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/Link5.STL" />
+          filename="meshes/wrist2.stl" />
       </geometry>
     </collision>
   </link>
@@ -348,7 +348,7 @@
     name="J5"
     type="revolute">
     <origin
-      xyz="0 0.00334216106109189 0.0795500000000001"
+      xyz="0 0 0"
       rpy="0 0 0" />
     <parent
       link="Wrist1" />
@@ -357,8 +357,8 @@
     <axis
       xyz="0 1 0" />
     <limit
-      lower="-1.57"
-      upper="1.57"
+      lower="-6.28"
+      upper="6.28"
       effort="0"
       velocity="3.141" />
     <dynamics
@@ -390,8 +390,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.003"/>
-        <!-- <mesh filename="meshes/Link5_fix.STL" /> -->
+        <mesh
+          filename="meshes/wrist3.stl" />
       </geometry>
       <material
         name="">
@@ -404,8 +404,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.003"/>
-        <!-- <mesh filename="meshes/Link5_fix.STL" /> -->
+        <mesh
+          filename="meshes/wrist3.stl" />
       </geometry>
     </collision>
   </link>
@@ -434,11 +434,12 @@
       soft_lower="-6"
       k_velocity="3.141" />
   </joint>
+
   <link
     name="EndEffector">
     <inertial>
       <origin
-        xyz="0 0.1 0"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="0.907" />
@@ -455,7 +456,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.003"/>
+        <mesh
+          filename="meshes/end_effector.stl" />
       </geometry>
       <material
         name="">
@@ -468,7 +470,8 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <cylinder radius="0.01" length="0.003"/>
+        <mesh
+          filename="meshes/end_effector.stl" />
       </geometry>
     </collision>
   </link>

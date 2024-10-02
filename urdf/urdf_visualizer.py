@@ -10,7 +10,7 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath())
 
 
 # Load your URDF model
-path = os.path.abspath("./UR16e_gpt.urdf")
+path = os.path.abspath("./UR16e_fixed.urdf")
 print(path)
 robot_id = p.loadURDF(path)
 
