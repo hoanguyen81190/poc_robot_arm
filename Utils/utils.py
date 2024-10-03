@@ -42,7 +42,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the URXe URDF file into the kinematic chain
-robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_final.urdf")#, active_links_mask=[False,True])
+robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_final.urdf", active_links_mask=[False,False,True,True,True,True,True,True,False,False])
 #robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_endEffector.urdf", active_links_mask=[False,True,True,True,True,True,True,False])
 
 print(robot_chain.links)

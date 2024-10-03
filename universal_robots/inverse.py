@@ -160,16 +160,17 @@ def simulation():
             # Map the input ranges so they are more meaningful for cotrolling the robot arm
             re_mapped_2 = re_mapped.copy()
             re_mapped_2[1] = map_to_range(re_mapped[1],0,1,-max_reach,max_reach)
-            re_mapped_2[2] = map_to_range(1-re_mapped[2],0,1,0,max_reach)
+            re_mapped_2[2] = map_to_range(1-re_mapped[2],0,1,0.5,max_reach) #Was 0-maxreach
             #print("Re-mapped to control robot arm: ", re_mapped_2)
             
             # Apply exponential smoothing 
-            smoothed_pos = smoother.update(re_mapped_2)
+            tmp_pos = np.asarray([0.1,0.1,re_mapped_2[2]]) #TODO update later when done testing
+            smoothed_pos = smoother.update(tmp_pos)
             #print("Smoothed pos: ", smoothed_pos)
 
 
             # TMP for testing one axis at a time
-            smoothed_pos = np.asarray([0,0,smoothed_pos[2]])
+            
 
             target_position_in = np.clip(smoothed_pos, -max_reach, max_reach)
             
@@ -204,13 +205,14 @@ def simulation():
                 if applied:
                     prevDeadbandPos = new_target_position
 
+            print(new_target_position)
+            raw_angles = getJointAnglesFromPose(new_target_position, plotFig=False)
+            #print(np.rad2deg(raw_angles))
             #Slice to remove the fixed joints immidiately to avoid consufion down the line
-            raw_angles = getJointAnglesFromPose(np.asarray([-0.6, 0, 0.6]))
-            # print(raw_angles)
-            joint_angles = raw_angles[1:-1]#target_position)
+            joint_angles = raw_angles[2:-2]#target_position)
             joint_angles = np.asarray([clamp_angle(normalize_angle(angle)) for angle in joint_angles])
 
-            joint_angles = smoother_joint.update(joint_angles)
+            #joint_angles = smoother_joint.update(joint_angles)
 
             # Rate limit the angles to increase stability
             #max_angle_change_per_step = 0.1  # Limit to 0.1 radians per time step
@@ -232,8 +234,9 @@ def simulation():
             # for i, handle in enumerate(joint_handles):
             #     sim.setJointTargetPosition(handle, joint_angles[i]) #NB do not forget to skip the base joint and the end effector joint from the IK chain. They are fixed and not used when controlling the robot. 
 
-            # print(joint_angles)
-            rtde_c.moveJ(joint_angles, 1.05/4, 1.4/4)
+            #print(joint_angles)
+            #joint_angles = np.deg2rad(np.asarray([90,0,0,0,0,0]))
+            rtde_c.moveJ(joint_angles, 1.05/4, 1.4/4, True)
 
             prev_time = time.time()
 
@@ -243,7 +246,7 @@ def simulation():
         #print(f'Simulation time: {simulation_time:.2f} [s]')
         #sim.step()
         #simulation_time = sim.getSimulationTime()
-        time.sleep(0.01)  # Sleep to avoid excessive CPU usage
+        time.sleep(1)  # Sleep to avoid excessive CPU usage
 
     # Stop the simulation
     #sim.stopSimulation()
