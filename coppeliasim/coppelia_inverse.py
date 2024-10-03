@@ -1,3 +1,14 @@
+import sys
+import os
+
+### In order to be able to import scripts from the SharedScripts directory, we need to append the parent directory to the system path
+# Get the grandparent directory of the current script
+current_dir = os.getcwd()
+parent_dir = os.path.dirname(os.path.realpath(current_dir))
+
+# Append the grandparent directory to the system path
+sys.path.append(parent_dir)
+
 from coppeliasim_zmqremoteapi_client import RemoteAPIClient
 from scipy.spatial.transform import Rotation as R
 import time
@@ -24,7 +35,7 @@ def pose_extraction(desired_landmark_ids=[12, 14, 16]):
 
     # Open the webcam
     # Was capture id 1
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     while cap.isOpened():
         if keyboard.is_pressed('esc'):  # Check if ESC key is pressed
@@ -96,8 +107,8 @@ def pose_to_joint_angles(data):
     return shoulder, elbow, wrist
 
 def simulation():
-    client = RemoteAPIClient()
-    sim = client.require('sim')
+    #client = RemoteAPIClient()
+    #sim = client.require('sim')
 
     #sim.setStepping(True)
 
@@ -114,19 +125,19 @@ def simulation():
 
     joint_handles = []
     for name in joint_names:
-        handle = sim.getObjectHandle(name)
+        handle = None #sim.getObjectHandle(name)
         if handle != -1:
             joint_handles.append(handle)
             #Configure speed of joint
             #defaultVelocity = sim.getJointTargetVelocity(handle)
             #print(f'Default velocity for {handle}: {defaultVelocity}')
             #sim.setJointTargetVelocity(handle, 10)
-            velocity = 2.0 #-- Set desired velocity (in rad/s for revolute joints)
-            acceleration = 5.0 #-- Set desired acceleration
+            #velocity = 2.0 #-- Set desired velocity (in rad/s for revolute joints)
+            #acceleration = 5.0 #-- Set desired acceleration
 
-            sim.setJointTargetVelocity(handle, velocity)
-            sim.setObjectFloatParameter(handle, sim.jointfloatparam_maxvel, velocity)
-            sim.setObjectFloatParameter(handle, sim.jointfloatparam_maxaccel, acceleration)
+            #sim.setJointTargetVelocity(handle, velocity)
+            #sim.setObjectFloatParameter(handle, sim.jointfloatparam_maxvel, velocity)
+            #sim.setObjectFloatParameter(handle, sim.jointfloatparam_maxaccel, acceleration)
             print(f'Handle for {name} retrieved successfully')
         else:
             print(f'Failed to get handle for {name}')
@@ -143,8 +154,10 @@ def simulation():
     prev_time = time.time()
 
     bUsePID = False
-    bUseDeadbandThresholding = True
+    bUseDeadbandThresholding = False
     prevDeadbandPos = np.asarray([0,0,0])
+
+    bTesting = True
 
     # Continuously step the coppelia simulation
     while (True):
@@ -152,6 +165,12 @@ def simulation():
             print("ESC key pressed. Stopping simulation.")
             break
         
+        if bTesting:
+            new_target_position = np.asarray([0,-1,0])
+            joint_angles = getJointAnglesFromPose(new_target_position, plotFig=False)
+            print(joint_angles)
+            break
+
         # Update the pose location if available 
         # TODO find out and document the coordinate systems of the mediapipe 
         #   and coppelia sim and the robot arm
@@ -216,7 +235,12 @@ def simulation():
                     prevDeadbandPos = new_target_position
 
             #Slice to remove the fixed joints immidiately to avoid consufion down the line
-            joint_angles = getJointAnglesFromPose(new_target_position)[1:-1]#target_position)
+            # Get the joint angles for the entire IK chain
+            joint_angles = getJointAnglesFromPose(new_target_position)#target_position)
+            #print(joint_angles)
+            # Slice away the fixed joints vefore passing the angles to the forward kinematics
+            joint_angles = joint_angles[1:-1]#target_position)
+
             joint_angles = np.asarray([clamp_angle(normalize_angle(angle)) for angle in joint_angles])
 
             joint_angles = smoother_joint.update(joint_angles)
@@ -228,15 +252,6 @@ def simulation():
             #    joint_angles - max_angle_change_per_step, 
             #    joint_angles + max_angle_change_per_step
             #)
-
-            #shoulder, elbow, wrist = pose_to_joint_angles(landmarks_data)
-            #Joint positions for the UR10 robot
-            # 0,0,0,0 is the home position which leaves the arm pointing straight up
-            # 0 is the base and rotates around the up axis
-            # 1 is the first joint and corresponds to the shoulder and rotates around the x or y axis
-            # 2 is the second joint and corresponds to the elbow and rotates around the x or y axis
-            # 3 is the third joint and corresponds to the wrist and rotates around the x or y axis
-            #joint_positions = [base, shoulder, elbow, wrist, 0, 0]  # Example positions in radians
 
             for i, handle in enumerate(joint_handles):
                 sim.setJointTargetPosition(handle, joint_angles[i]) #NB do not forget to skip the base joint and the end effector joint from the IK chain. They are fixed and not used when controlling the robot. 
@@ -256,8 +271,8 @@ def simulation():
 
 if __name__ == '__main__':
     landmark_ids = [16,18,20]
-    pose_extraction_thread = threading.Thread(target=pose_extraction, args=(landmark_ids,))
-    pose_extraction_thread.start()
+    #pose_extraction_thread = threading.Thread(target=pose_extraction, args=(landmark_ids,))
+    #pose_extraction_thread.start()
 
     simulation_thread = threading.Thread(target=simulation, )
     simulation_thread.start()
