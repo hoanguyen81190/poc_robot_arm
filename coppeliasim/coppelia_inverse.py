@@ -168,6 +168,10 @@ def simulation():
         if bTesting:
             new_target_position = np.asarray([0,-1,0])
             joint_angles = getJointAnglesFromPose(new_target_position, plotFig=False)
+            print("FIRST ANGLES")
+            print(joint_angles)
+            joint_angles = getJointAnglesFromPose(new_target_position, plotFig=False)
+            print("SECOND ANGLES")
             print(joint_angles)
             break
 

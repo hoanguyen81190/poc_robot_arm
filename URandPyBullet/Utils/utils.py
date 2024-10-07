@@ -76,13 +76,6 @@ print(robot_chain.links)
 #    (-2 * np.pi, 2 * np.pi)   # Joint 6
 #]
 
-# Rate limit the angles to increase stability
-#max_angle_change_per_step = 0.1  # Limit to 0.1 radians per time step
-#joint_angles = np.clip(
-#    joint_angles, 
-#    joint_angles - max_angle_change_per_step, 
-#    joint_angles + max_angle_change_per_step
-#)
 
 def getJointAnglesFromPose(target_position, target_orientation=np.eye(3), orientation_mode="all", plotFig=False):
     # Compute inverse kinematics solution to get joint angles
