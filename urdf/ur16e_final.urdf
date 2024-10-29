@@ -286,7 +286,7 @@
     <child link="shoulder_link"/>
     <origin rpy="0 0 0" xyz="0 0 0.1807"/>
     <axis xyz="0 0 1"/>
-    <limit effort="330.0" lower="-6.283185307179586" upper="6.283185307179586" velocity="2.0943951023931953"/>
+    <limit effort="330.0" lower="-3.141592653589793" upper="3.141592653589793" velocity="2.0943951023931953"/>
     <dynamics damping="0" friction="0"/>
   </joint>
   <joint name="shoulder_lift_joint" type="revolute">
@@ -294,7 +294,7 @@
     <child link="upper_arm_link"/>
     <origin rpy="1.570796327 0 0" xyz="0 0 0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="330.0" lower="-6.283185307179586" upper="6.283185307179586" velocity="2.0943951023931953"/>
+    <limit effort="330.0" lower="-3.141592653589793" upper="3.141592653589793" velocity="2.0943951023931953"/>
     <dynamics damping="0" friction="0"/>
   </joint>
   <joint name="elbow_joint" type="revolute">
@@ -310,7 +310,7 @@
     <child link="wrist_1_link"/>
     <origin rpy="0 0 0" xyz="-0.36 0 0.17415"/>
     <axis xyz="0 0 1"/>
-    <limit effort="56.0" lower="-6.283185307179586" upper="6.283185307179586" velocity="3.141592653589793"/>
+    <limit effort="56.0" lower="-3.141592653589793" upper="3.141592653589793" velocity="3.141592653589793"/>
     <dynamics damping="0" friction="0"/>
   </joint>
   <joint name="wrist_2_joint" type="revolute">
@@ -318,7 +318,7 @@
     <child link="wrist_2_link"/>
     <origin rpy="1.570796327 0 0" xyz="0 -0.11985 -2.458164590756244e-11"/>
     <axis xyz="0 0 1"/>
-    <limit effort="56.0" lower="-6.283185307179586" upper="6.283185307179586" velocity="3.141592653589793"/>
+    <limit effort="56.0" lower="-3.141592653589793" upper="3.141592653589793" velocity="3.141592653589793"/>
     <dynamics damping="0" friction="0"/>
   </joint>
   <joint name="wrist_3_joint" type="revolute">
@@ -326,7 +326,7 @@
     <child link="wrist_3_link"/>
     <origin rpy="1.570796326589793 3.141592653589793 3.141592653589793" xyz="0 0.11655 -2.390480459346185e-11"/>
     <axis xyz="0 0 1"/>
-    <limit effort="56.0" lower="-6.283185307179586" upper="6.283185307179586" velocity="3.141592653589793"/>
+    <limit effort="56.0" lower="-3.141592653589793" upper="3.141592653589793" velocity="3.141592653589793"/>
     <dynamics damping="0" friction="0"/>
   </joint>
   <!-- ROS-Industrial 'base' frame: base_link to UR 'Base' Coordinates transform -->
@@ -341,35 +341,5 @@
     <parent link="base_link"/>
     <child link="base"/>
   </joint>
-  <!-- ROS-Industrial 'flange' frame: attachment point for EEF models -->
-  <link name="flange"/>
-  <joint name="wrist_3-flange" type="fixed">
-    <parent link="wrist_3_link"/>
-    <child link="flange"/>
-    <origin rpy="0 -1.5707963267948966 -1.5707963267948966" xyz="0 0 0"/>
-  </joint>
-  <!-- ROS-Industrial 'tool0' frame: all-zeros tool frame -->
-  <link name="tool0">
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 .2"/>
-      <geometry>
-        <cylinder radius=".2" length=".4"/>
-      </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 .2"/>
-      <geometry>
-        <cylinder radius=".2" length=".4"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint name="flange-tool0" type="fixed">
-    <!-- default toolframe: X+ left, Y+ up, Z+ front -->
-    <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="0 0 0"/>
-    <parent link="flange"/>
-    <child link="tool0"/>
-  </joint>
+  
 </robot>

@@ -89,23 +89,38 @@ def process_landmarks_to_target_position(landmarks_data, max_reach, smoother):
 
     # Map the input ranges so they are more meaningful for cotrolling the robot arm
     re_mapped[1] = map_to_range(re_mapped[1],0,1,-max_reach,max_reach)
-    re_mapped[2] = map_to_range(1-re_mapped[2],0,1,0,max_reach) 
+    re_mapped[2] = map_to_range(1-re_mapped[2],0,1,0.4,max_reach) 
 
     # Apply exponential smoothing 
-    target_position = np.asarray([0.1,0.1,target_position[2]]) #TODO update later when done testing
-    smoothed_pos = smoother.update(target_position)
+    #target_position = np.asarray([0.1,0.1,re_mapped[2]]) #TODO update later when done testing
+    smoothed_pos = smoother.update(re_mapped)
 
     # Clamp the target position to the maximum reach of the robot arm
     target_position_in = np.clip(smoothed_pos, -max_reach, max_reach)
     # Ensure the target position is above the ground
     target_position_in[2] = 0 if target_position_in[2] < 0 else target_position_in[2]
-    return target_position
+    return target_position_in
+
+def euler_to_quaternion(yaw, pitch, roll):
+    qx = np.sin(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) - np.cos(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+    qy = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
+    qz = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
+    qw = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
+
+    return np.array([qx, qy, qz, qw])
 
 #TODO Implement this function
-def get_joint_angles_and_end_effector_pose_from_robot():
-    angles = np.zeros(6)
-    end_effector_pos = np.zeros(3)
-    end_effector_orientation = np.zeros(4)
+def get_joint_angles_and_end_effector_pose_from_robot(rtde_r):
+    angles = np.array(rtde_r.getActualQ())
+    actual_TCP = np.array(rtde_r.getActualTCPPose())
+    #print("Angles: ", angles)
+    end_effector_pos = actual_TCP[0:3]
+    end_effector_pos[0] = end_effector_pos[0]
+    end_effector_pos[1] = end_effector_pos[1]
+    print("End effector pos: ", end_effector_pos)
+    end_effector_orientation = euler_to_quaternion(actual_TCP[5], actual_TCP[4], actual_TCP[3])
+    end_effector_orientation = euler_to_quaternion(0,0,np.deg2rad(0))
+    #print("End effector orientation: ", end_effector_orientation)
     return angles, end_effector_pos, end_effector_orientation
 
 def simulation():
@@ -135,19 +150,26 @@ def simulation():
             # Process the landmarks data to get the target position
             landmarks_data = pose_queue.get_nowait()
             target_position = process_landmarks_to_target_position(landmarks_data, max_reach, smoother)
+            
+            # TODO remove when finished testing - This is to test one axis at a time
+            target_position = np.asarray([0,-1,0])
+            
             # Only update the target position if the deadband thresholding is not applied to avoid unnecessary commands
             if bUseDeadbandThresholding:
                 target_position, applied = deadband_control(target_position, prevDeadbandPos, deadband_threshold=0.05)
                 if applied:
                     prevDeadbandPos = target_position
+                else: #No point sending the same position again
+                    continue
 
             # Get the current joint angles and position and orientation of the end effector from the actual robot
-            start_joint_angles, end_effector_pos, end_effector_orientation = get_joint_angles_and_end_effector_pose_from_robot()
-
+            start_joint_angles, end_effector_pos, end_effector_orientation = get_joint_angles_and_end_effector_pose_from_robot(rtde_r)
+         
             # Simulate the target position in pybullet to ensure that there will be no self collisions before executing on the actual robot
-            collisionDetected, intermidiatePositions, intermediate_joint_angles = simCollider.simulate_path_to_target(start_joint_angles, end_effector_pos, end_effector_orientation, target_position=[0,0,1.3], num_segments=10)
+            collisionDetected, intermidiatePositions, intermediate_joint_angles = simCollider.simulate_path_to_target(start_joint_angles, end_effector_pos, end_effector_orientation, target_position=target_position, num_segments=5)
+            
 
-            if not collisionDetected:
+            if False and not collisionDetected:
                 for angles in intermediate_joint_angles:
                     # Send the joint angles to the physical robot arm
                     speed = 1.05/4

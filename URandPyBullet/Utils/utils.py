@@ -41,11 +41,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-# Load the URXe URDF file into the kinematic chain
-robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_final.urdf", active_links_mask=[False,False,True,True,True,True,True,True,False,False])
-#robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_endEffector.urdf", active_links_mask=[False,True,True,True,True,True,True,False])
 
-print(robot_chain.links)
 
 # Desired 3D position of the end-effector in meters
 #target_position = [3, 0.5, 0.4]  # x, y, z coordinates
@@ -78,6 +74,12 @@ print(robot_chain.links)
 
 
 def getJointAnglesFromPose(target_position, target_orientation=np.eye(3), orientation_mode="all", plotFig=False):
+    # Load the URXe URDF file into the kinematic chain
+    robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_final.urdf", active_links_mask=[False,False,True,True,True,True,True,True,False,False])
+    #robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_endEffector.urdf", active_links_mask=[False,True,True,True,True,True,True,False])
+
+    print(robot_chain.links)
+
     # Compute inverse kinematics solution to get joint angles
     joint_angles = robot_chain.inverse_kinematics(target_position=target_position, max_iter=1000)#,
                                                 #target_orientation=target_orientation,orientation_mode=orientation_mode)
@@ -104,6 +106,12 @@ def clamp_angle(angle):
 def testForwardIKPY(joint_angles, plotFig=False):
     import numpy as np
     from ikpy.chain import Chain
+
+    # Load the URXe URDF file into the kinematic chain
+    robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_final.urdf", active_links_mask=[False,False,True,True,True,True,True,True,False,False])
+    #robot_chain = Chain.from_urdf_file(parent_dir+"/urdf/UR16e_endEffector.urdf", active_links_mask=[False,True,True,True,True,True,True,False])
+
+    print(robot_chain.links)
 
     # Inspect the chain structure
     #print(f"Number of links: {len(robot_chain.links)}")
